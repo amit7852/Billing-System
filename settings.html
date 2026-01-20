@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Neha Electronics</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .sidebar {
+            background-color: #343a40;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            padding: 20px;
+        }
+        .sidebar a {
+            color: #adb5bd;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+        .sidebar a:hover {
+            color: #fff;
+        }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #9afcff;
+            color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar" aria-label="Sidebar Navigation">
+        <h2 class="text-center">Neha Electronics</h2>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="billing.html">Billing</a>
+        <a href="products.html">Products</a>
+        <a href="reports.html">Reports</a>
+        <a href="settings.html" class="active">Settings</a>
+    </nav>
+    <div class="content">
+        <div class="header mb-4">
+            <div class="d-flex align-items-center">
+                <img src="images/logo.png" alt="Neha Electronics Logo">
+                <h1>Settings</h1>
+            </div>
+            <div class="date-time" id="date-time"></div>
+        </div>
+        <div class="card p-4">
+            <h2 class="text-center mb-4">Manage Settings</h2>
+            <form id="settings-form">
+                <!-- Company Name -->
+                <div class="mb-3">
+                    <label for="companyName" class="form-label">Company Name</label>
+                    <input type="text" class="form-control" id="companyName" placeholder="Enter company name" required>
+                </div>
+                <!-- Contact Email -->
+                <div class="mb-3">
+                    <label for="contactEmail" class="form-label">Contact Email</label>
+                    <input type="email" class="form-control" id="contactEmail" placeholder="Enter contact email" required>
+                </div>
+                <!-- Theme Selection -->
+                <div class="mb-3">
+                    <label for="themeSelection" class="form-label">Theme</label>
+                    <select class="form-select" id="themeSelection">
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+                <!-- Save Button -->
+                <button type="submit" class="btn btn-success w-100">Save Settings</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const settingsForm = document.getElementById('settings-form');
+            const companyNameInput = document.getElementById('companyName');
+            const contactEmailInput = document.getElementById('contactEmail');
+            const themeSelection = document.getElementById('themeSelection');
+
+            // Load settings from local storage
+            const loadSettings = () => {
+                const settings = JSON.parse(localStorage.getItem('settings')) || {};
+                companyNameInput.value = settings.companyName || '';
+                contactEmailInput.value = settings.contactEmail || '';
+                themeSelection.value = settings.theme || 'light';
+                applyTheme(settings.theme || 'light');
+            };
+
+            // Save settings to local storage
+            const saveSettings = (e) => {
+                e.preventDefault();
+                const settings = {
+                    companyName: companyNameInput.value,
+                    contactEmail: contactEmailInput.value,
+                    theme: themeSelection.value
+                };
+                localStorage.setItem('settings', JSON.stringify(settings));
+                applyTheme(settings.theme);
+                alert('Settings saved successfully!');
+            };
+
+            // Apply theme
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.body.style.backgroundColor = '#343a40';
+                    document.body.style.color = '#fff';
+                } else {
+                    document.body.style.backgroundColor = '#f8f9fa';
+                    document.body.style.color = '#000';
+                }
+            };
+
+            // Display current date and time
+            const updateDateTime = () => {
+                const dateTimeElement = document.getElementById('date-time');
+                const now = new Date();
+                const formattedDate = now.toLocaleDateString();
+                const formattedTime = now.toLocaleTimeString();
+                dateTimeElement.textContent = `${formattedDate} ${formattedTime}`;
+            };
+
+            // Event listeners
+            settingsForm.addEventListener('submit', saveSettings);
+            loadSettings();
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+        });
+    </script>
+</body>
+</html>
